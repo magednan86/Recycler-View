@@ -1,0 +1,71 @@
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.RecyclerViewHolder>  {
+    private ArrayList<String> mImageNames =new ArrayList<String>();
+    private ArrayList<String> mImages =new ArrayList<String>();
+    private Context context;
+
+    public RecyclerViewAdapter(ArrayList<String> mImageNames, ArrayList<String> mImages, Context context) {
+        this.mImageNames = mImageNames;
+        this.mImages = mImages;
+        this.context = context;
+
+    }
+
+    private static final String TAG ="RecyclerViewAdapter";
+
+    @NonNull
+    @Override
+    public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items,parent,false);
+        RecyclerViewHolder vh =new RecyclerViewHolder(view);
+        return vh;    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, final int position) {
+        Log.d(TAG,"onBindViewHolder :called ");
+        Glide.with(context)
+                .asBitmap()
+                .load(mImages.get(position))
+                .into(holder.image);
+        holder.textView.setText(mImageNames.get(position));
+        //click
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"onBindViewHolder :called "+mImageNames.get(position));
+               // Toast img name
+                Toast.makeText(context,mImageNames.get(position),Toast.LENGTH_LONG).show();
+                //go to gallery activity
+                Intent intent =new Intent(context,Gallery_Activity.class);
+                intent.putExtra("mImage_url",mImages.get(position));
+                intent.putExtra("mImage_Des",mImageNames.get(position));
+                context.startActivity(intent);
+
+
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return mImageNames.size();
+    }
+
+
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder{
+    CircleImageView image;
+    TextView textView;
+    RelativeLayout parent;
+    public RecyclerViewHolder(@NonNull View itemView) {
+        super(itemView);
+        image = itemView.findViewById(R.id.image);
+        textView= itemView.findViewById(R.id.image_name);
+        parent=itemView.findViewById(R.id.parent_layout);
+    }
+}
+
+
+}
+*************************************************
+ //recycler view
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+*********************************************************
